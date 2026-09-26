@@ -1,33 +1,34 @@
-✈️ Aircraft Linux Monitoring & Maintenance System
+# ✈️ Aircraft Linux Monitoring & Maintenance System
 
-A Linux-based aircraft maintenance monitoring and diagnostic project that combines Linux system administration, Bash scripting, fault detection, networking, automation, and aircraft/avionics maintenance concepts.
+A Linux-based aircraft maintenance monitoring and diagnostic project that combines Linux system administration, Bash scripting, networking, fault detection, maintenance logging, automation, and aircraft/avionics maintenance concepts.
 
-«Note: This is an educational and portfolio project. It is not intended for use as a certified aircraft maintenance or safety-critical system.»
+> Note: This is an educational and portfolio project. It is not intended for use as a certified aircraft maintenance, avionics, or safety-critical system.
 
 ---
 
-🎯 Project Objective
+## 🎯 Project Objective
 
 The goal of this project is to demonstrate how Linux-based monitoring and automation concepts can be applied to an aircraft maintenance-oriented environment.
 
-The system collects Linux health information, performs basic fault detection, monitors network status, tracks simulated aircraft subsystem conditions, and generates a structured aircraft health report.
+The system performs Linux system monitoring, network diagnostics, threshold-based fault detection, maintenance alert generation, and automated health-report generation.
 
 ---
 
-🛠️ Technologies Used
+## 🛠️ Technologies Used
 
 - Linux
 - Bash / Shell Scripting
 - Git & GitHub
 - Linux System Monitoring
 - Networking Diagnostics
-- Fault Detection Logic
+- Fault Detection
 - Maintenance Logging
 - Automation
+- Configuration Management
 
 ---
 
-✈️ Aircraft-Oriented Subsystems
+## ✈️ Aircraft-Oriented Subsystems
 
 The project models monitoring information for:
 
@@ -36,186 +37,254 @@ The project models monitoring information for:
 - Power Distribution
 - Flight Control Interface
 
-These subsystem states are represented as simulated maintenance data for educational purposes.
+These subsystem states are simulated for educational and portfolio purposes.
 
 ---
 
-⚙️ Project Workflow
+## ⚙️ System Workflow
 
-Linux System
-     │
-     ▼
+AIRCRAFT LINUX SYSTEM
+        │
+        ▼
 System Monitoring
-     │
-     ▼
-Fault Detection Engine
-     │
-     ▼
-Aircraft Subsystem Status
-     │
-     ▼
-Maintenance Event Log
-     │
-     ▼
-Automated Health Report
+        │
+        ▼
+Network Diagnostics
+        │
+        ▼
+Fault Detection
+        │
+        ▼
+Maintenance Alerts
+        │
+        ▼
+Health Report
 
 ---
 
-📂 Project Structure
+## 📂 Project Structure
 
 Aircraft-Linux-Monitor/
 │
 ├── aircraft-linux-monitor.sh
+│   └── Linux system monitoring
+│
+├── network_diagnostics.sh
+│   └── Network interface, route, connectivity and DNS checks
+│
 ├── fault_detection.sh
+│   └── Threshold-based fault detection
+│
+├── maintenance_alert.sh
+│   └── Maintenance alert and fault-code generation
+│
 ├── generate_health_report.sh
+│   └── Automated system health report generation
+│
 ├── run_diagnostics.sh
+│   └── Main diagnostic workflow controller
+│
 ├── maintenance_log.txt
+│   └── Simulated maintenance event log
+│
+├── config.conf
+│   └── Configurable diagnostic thresholds and subsystem settings
+│
 └── README.md
+    └── Project documentation
 
 ---
 
-🔍 Main Components
+## 🔍 Main Components
 
-1. Aircraft Linux Monitor
+### 1. Linux System Monitor
 
-"aircraft-linux-monitor.sh"
+`aircraft-linux-monitor.sh`
 
-Collects basic Linux system information including:
+Collects:
 
 - Hostname
 - Kernel version
 - Operating system
-- CPU load
+- CPU information
 - Memory usage
 - Disk usage
+- Network interface information
+
+### 2. Network Diagnostic Module
+
+`network_diagnostics.sh`
+
+Performs basic network diagnostics including:
+
 - Network interface status
+- Default route detection
+- Internet connectivity testing
+- DNS resolution testing
 
-2. Fault Detection Engine
+### 3. Fault Detection Engine
 
-"fault_detection.sh"
+`fault_detection.sh`
 
-Performs basic threshold-based diagnostics.
+Uses configurable thresholds to identify abnormal system conditions.
 
-Example checks:
+It checks:
 
-- High memory usage
-- High disk utilization
-- Storage warning conditions
-- Overall diagnostic status
+- Memory utilization
+- Disk utilization
+- Warning thresholds
+- Critical thresholds
+- Aircraft subsystem status
 
-3. Health Report Generator
+### 4. Maintenance Alert System
 
-"generate_health_report.sh"
+`maintenance_alert.sh`
 
-Creates an automated report containing:
+Generates maintenance-oriented alerts when monitored conditions exceed configured thresholds.
+
+Example fault codes:
+
+SYS-MEM-800  → Memory warning
+SYS-MEM-900  → Memory critical
+SYS-DISK-800 → Disk warning
+SYS-DISK-900 → Disk critical
+
+Detected maintenance events can be recorded in the maintenance log.
+
+### 5. Health Report Generator
+
+`generate_health_report.sh`
+
+Generates:
+
+`aircraft_health_report.txt`
+
+The report contains:
 
 - System information
-- Resource utilization
+- CPU load
+- Memory status
+- Disk status
 - Network status
 - Aircraft subsystem status
-- Maintenance summary
+- Fault count
+- Warning count
 - Overall system status
 
-4. Diagnostic Workflow
+### 6. Diagnostic Workflow Controller
 
-"run_diagnostics.sh"
+`run_diagnostics.sh`
 
-Acts as the main entry point and executes the complete monitoring workflow:
+Acts as the main entry point for the project.
+
+It executes:
 
 System Monitor
       ↓
+Network Diagnostics
+      ↓
 Fault Detection
+      ↓
+Maintenance Alerts
       ↓
 Health Report
 
 ---
 
-📋 Maintenance Event Logging
+## ⚙️ Configuration
 
-"maintenance_log.txt" stores simulated aircraft maintenance events.
+`config.conf` contains configurable diagnostic thresholds.
 
-Each event includes:
+Example:
 
+MEMORY_WARNING_THRESHOLD=80
+MEMORY_CRITICAL_THRESHOLD=90
+
+DISK_WARNING_THRESHOLD=80
+DISK_CRITICAL_THRESHOLD=90
+
+This allows diagnostic thresholds to be modified without changing the main scripts.
+
+---
+
+## 📋 Maintenance Event Logging
+
+`maintenance_log.txt` stores simulated maintenance events.
+
+Each event can include:
+
+- Date
 - Subsystem
 - Status
 - Fault code
-- Maintenance action
-
-This demonstrates the concept of structured maintenance event tracking.
-
----
-
-💻 Example Diagnostic Output
-
-======================================
-   AIRCRAFT LINUX SYSTEM MONITOR
-======================================
-
-System Information
-------------------
-Hostname: linux-system
-Kernel: Linux kernel
-OS: Ubuntu Linux
-
-CPU Usage
----------
-System CPU information
-
-Memory Usage
-------------
-Memory utilization
-
-Disk Usage
-----------
-Filesystem utilization
-
-Network Status
---------------
-Network interfaces
-
-Aircraft Maintenance Monitoring
---------------------------------
-Linux environment check completed.
-Status: READY
+- Diagnostic condition
+- Recommended action
 
 ---
 
-🚀 Future Improvements
+## 🚀 How to Run
 
-Planned improvements include:
+Make the scripts executable:
 
-- Automated maintenance alerts
-- More aircraft subsystem simulations
-- Fault-code database
-- CSV/JSON maintenance records
-- Log rotation
-- Network connectivity tests
-- Service availability monitoring
-- Python-based dashboard
-- Automated scheduled diagnostics
-- Advanced anomaly detection
-- Configurable diagnostic thresholds
+chmod +x *.sh
+
+Run the complete diagnostic workflow:
+
+./run_diagnostics.sh
+
+The system will execute all monitoring modules and generate the health report.
 
 ---
 
-🎓 Learning Outcomes
+## 📄 Generated Report
+
+After execution, the system generates:
+
+`aircraft_health_report.txt`
+
+The report provides a consolidated overview of the monitored Linux environment and simulated aircraft subsystem conditions.
+
+---
+
+## 🎓 Learning Outcomes
 
 This project demonstrates practical understanding of:
 
 - Linux command-line tools
 - Bash scripting
-- System monitoring
-- Basic networking diagnostics
 - Conditional logic
+- Configuration management
+- System monitoring
+- Network diagnostics
+- Fault detection
+- Maintenance event logging
 - Automation
-- Log management
-- Technical troubleshooting
+- Git & GitHub workflow
 - Aircraft maintenance concepts
-- Git and GitHub workflow
+- Avionics-oriented system thinking
 
 ---
 
-⚠️ Disclaimer
+## 🔮 Future Improvements
+
+Potential future enhancements include:
+
+- Python-based monitoring dashboard
+- CSV/JSON maintenance records
+- Automated scheduled diagnostics
+- Email or notification alerts
+- Expanded aircraft subsystem simulation
+- Fault-code database
+- Log rotation
+- Service availability monitoring
+- Historical health tracking
+- Anomaly detection
+- Sensor-data simulation
+- Maintenance trend analysis
+
+---
+
+## ⚠️ Disclaimer
 
 This project is designed for education, experimentation, and portfolio demonstration.
 
