@@ -5,22 +5,27 @@ echo "   AIRCRAFT LINUX DIAGNOSTIC SYSTEM"
 echo "=========================================="
 
 echo ""
-echo "[1/4] Running Linux system monitor..."
+echo "[1/5] Running Linux system monitor..."
 echo "------------------------------------------"
 bash aircraft-linux-monitor.sh
 
 echo ""
-echo "[2/4] Running network diagnostics..."
+echo "[2/5] Running network diagnostics..."
 echo "------------------------------------------"
 bash network_diagnostics.sh
 
 echo ""
-echo "[3/4] Running fault detection engine..."
+echo "[3/5] Running fault detection engine..."
 echo "------------------------------------------"
 bash fault_detection.sh
 
 echo ""
-echo "[4/4] Generating aircraft health report..."
+echo "[4/5] Running maintenance alert system..."
+echo "------------------------------------------"
+bash maintenance_alert.sh
+
+echo ""
+echo "[5/5] Generating aircraft health report..."
 echo "------------------------------------------"
 bash generate_health_report.sh
 
@@ -30,5 +35,8 @@ echo "       DIAGNOSTIC WORKFLOW COMPLETE"
 echo "=========================================="
 
 echo ""
-echo "Health report: aircraft_health_report.txt"
-echo "System status: DIAGNOSTIC CYCLE COMPLETE"
+echo "Generated report: aircraft_health_report.txt"
+echo "Maintenance log: maintenance_log.txt"
+
+echo ""
+echo "All diagnostic modules completed."
