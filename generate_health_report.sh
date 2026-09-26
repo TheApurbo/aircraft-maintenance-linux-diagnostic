@@ -1,51 +1,124 @@
 #!/bin/bash
 
+CONFIG_FILE="config.conf"
 REPORT="aircraft_health_report.txt"
 
-echo "========================================" > "$REPORT"
-echo "     AIRCRAFT LINUX HEALTH REPORT" >> "$REPORT"
-echo "========================================" >> "$REPORT"
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo "[ERROR] Configuration file not found: $CONFIG_FILE"
+    exit 1
+fi
 
-echo "" >> "$REPORT"
-echo "Generated: $(date)" >> "$REPORT"
-echo "Hostname: $(hostname)" >> "$REPORT"
-echo "Kernel: $(uname -r)" >> "$REPORT"
+source "$CONFIG_FILE"
 
-echo "" >> "$REPORT"
-echo "SYSTEM RESOURCES" >> "$REPORT"
-echo "----------------" >> "$REPORT"
+MEMORY_USED=$(free | awk '/Mem:/ {printf "%.0f", $3/$2 * 100}')
+DISK_USED=$(df / | awk 'NR==2 {gsub("%",""); print $5}')
+CPU_LOAD=$(awk '{print $1}' /proc/loadavg)
 
-echo "CPU Load: $(awk '{print $1}' /proc/loadavg)" >> "$REPORT"
-echo "Memory Usage: $(free | awk '/Mem:/ {printf "%.0f", $3/$2 * 100}')%" >> "$REPORT"
-echo "Disk Usage: $(df / | awk 'NR==2 {gsub("%",""); print $5}')%" >> "$REPORT"
+if [ "$MEMORY_USED" -ge "$MEMORY_CRITICAL_THRESHOLD" ]; then
+    MEMORY_STATUS="CRITICAL"
+elif [ "$MEMORY_USED" -ge "$MEMORY_WARNING_THRESHOLD" ]; then
+    MEMORY_STATUS="WARNING"
+else
+    MEMORY_STATUS="NORMAL"
+fi
 
-echo "" >> "$REPORT"
-echo "NETWORK STATUS" >> "$REPORT"
-echo "--------------" >> "$REPORT"
-ip -br addr >> "$REPORT"
+if [ "$DISK_USED" -ge "$DISK_CRITICAL_THRESHOLD" ]; then
+    DISK_STATUS="CRITICAL"
+elif [ "$DISK_USED" -ge "$DISK_WARNING_THRESHOLD" ]; then
+    DISK_STATUS="WARNING"
+else
+    DISK_STATUS="NORMAL"
+fi
 
-echo "" >> "$REPORT"
-echo "AIRCRAFT SUBSYSTEM STATUS" >> "$REPORT"
-echo "--------------------------" >> "$REPORT"
+if ping -c 2 -W 2 1.1.1.1 > /dev/null 2>&1; then
+    NETWORK_STATUS="NORMAL"
+else
+    NETWORK_STATUS="WARNING"
+fi
 
-echo "Navigation System: NORMAL" >> "$REPORT"
-echo "Communication System: NORMAL" >> "$REPORT"
-echo "Power Distribution: NORMAL" >> "$REPORT"
-echo "Flight Control Interface: NORMAL" >> "$REPORT"
+CRITICAL_FAULTS=0
+WARNINGS=0
 
-echo "" >> "$REPORT"
-echo "MAINTENANCE SUMMARY" >> "$REPORT"
-echo "-------------------" >> "$REPORT"
-echo "Critical Faults: 0" >> "$REPORT"
-echo "Warnings: 0" >> "$REPORT"
-echo "Maintenance Required: NO" >> "$REPORT"
+if [ "$MEMORY_STATUS" = "CRITICAL" ]; then
+    ((CRITICAL_FAULTS++))
+elif [ "$MEMORY_STATUS" = "WARNING" ]; then
+    ((WARNINGS++))
+fi
 
-echo "" >> "$REPORT"
-echo "OVERALL STATUS: OPERATIONAL" >> "$REPORT"
+if [ "$DISK_STATUS" = "CRITICAL" ]; then
+    ((CRITICAL_FAULTS++))
+elif [ "$DISK_STATUS" = "WARNING" ]; then
+    ((WARNINGS++))
+fi
 
-echo "" >> "$REPORT"
-echo "========================================" >> "$REPORT"
-echo "       END OF HEALTH REPORT" >> "$REPORT"
-echo "========================================" >> "$REPORT"
+if [ "$NETWORK_STATUS" = "WARNING" ]; then
+    ((WARNINGS++))
+fi
 
-echo "Health report generated: $REPORT"
+if [ "$CRITICAL_FAULTS" -gt 0 ]; then
+    OVERALL_STATUS="CRITICAL"
+elif [ "$WARNINGS" -gt 0 ]; then
+    OVERALL_STATUS="WARNING"
+else
+    OVERALL_STATUS="OPERATIONAL"
+fi
+
+cat > "$REPORT" <<EOF
+========================================
+     AIRCRAFT LINUX HEALTH REPORT
+========================================
+
+Generated: $(date)
+Hostname: $(hostname)
+Kernel: $(uname -r)
+Operating System: $(. /etc/os-release && echo "$PRETTY_NAME")
+
+----------------------------------------
+SYSTEM RESOURCE STATUS
+----------------------------------------
+
+CPU Load: $CPU_LOAD
+
+Memory Usage: $MEMORY_USED%
+Memory Status: $MEMORY_STATUS
+
+Disk Usage: $DISK_USED%
+Disk Status: $DISK_STATUS
+
+----------------------------------------
+NETWORK STATUS
+----------------------------------------
+
+Network Connectivity: $NETWORK_STATUS
+
+----------------------------------------
+AIRCRAFT SUBSYSTEM STATUS
+----------------------------------------
+
+Navigation System: $NAVIGATION_STATUS
+Communication System: $COMMUNICATION_STATUS
+Power Distribution: $POWER_DISTRIBUTION_STATUS
+Flight Control Interface: $FLIGHT_CONTROL_STATUS
+
+----------------------------------------
+MAINTENANCE SUMMARY
+----------------------------------------
+
+Critical Faults: $CRITICAL_FAULTS
+Warnings: $WARNINGS
+Maintenance Logging: $ENABLE_MAINTENANCE_LOG
+
+----------------------------------------
+OVERALL SYSTEM STATUS
+----------------------------------------
+
+$OVERALL_STATUS
+
+========================================
+       END OF HEALTH REPORT
+========================================
+EOF
+
+echo "Health report generated successfully."
+echo "Report file: $REPORT"
+echo "Overall Status: $OVERALL_STATUS"
